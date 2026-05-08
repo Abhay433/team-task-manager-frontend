@@ -11,7 +11,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class AuthService {
   private jwtHelper = new JwtHelperService();
-  
+
   private currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -20,7 +20,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router
-  ) {}
+  ) { }
 
   get currentUserValue(): User | null {
     return this.currentUserSubject.value;
@@ -42,6 +42,10 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.API_URL}/signup`, payload).pipe(
       tap(response => this.handleAuthentication(response))
     );
+  }
+
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.API_URL}/users`);
   }
 
   logout() {
